@@ -1,13 +1,88 @@
 // TODO: Include packages needed for this application
 
+const inquirer = require('inquirer');
+const fs = require('fs');
+const { generateMarkdown } = require(`./utils/js/GenerateMarkdown`);
 // TODO: Create an array of questions for user input
-const questions = [];
+const questions = [
+  'What is your project title?',
+  'What is the description of this project?',
+  'What installation steps are required to run this?',
+  'What instructions or examples are there using the projects? (Add screenshot: copy and past, ![alt text](utils/img/img.png))',
+  'What license does it use?',
+  'are there any contributing guidelines?',
+  'what test have you written to be able to run from the readme? you must write them here.',
+  'what is your Github Username?',
+  'What is your email address?',
+];
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+  fs.writeFile(fileName, data, (err) =>
+    err ? console.log(err) : console.log(`Markdown File Generated`)
+  );
+}
 
 // TODO: Create a function to initialize app
 function init() {}
-
+inquirer.createPromptModule([
+  {
+    type: 'input',
+    name: 'title',
+    message: questions[0],
+  },
+  {
+    type: 'input',
+    name: 'description',
+    message: questions[1],
+  },
+  {
+    type: 'input',
+    name: 'install',
+    message: questions[2],
+  },
+  {
+    type: 'input',
+    name: 'usage',
+    message: questions[3],
+  },
+  {
+    type: 'list',
+    name: 'license',
+    message: questions[4],
+    choices: [
+      'No License used.',
+      'MIT License.',
+      'Apache License 2.0.',
+      'Mozilla Public License 2.0.',
+      'GNU GPLv3.',
+    ],
+  },
+  {
+    type: 'list',
+    name: 'contribute',
+    message: questions[5],
+    choices: [
+      'Contributing guidelines: [Code of conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)',
+      'To be decided on at a later date.',
+    ],
+  },
+  {
+    type: 'input',
+    name: 'test',
+    message: questions[6],
+  },
+  {
+    type: 'input',
+    name: 'username',
+    message: questions[7],
+  },
+  {
+    type: 'input',
+    name: 'email',
+    message: questions[8],
+  },
+])
+.then((data) => writeToFile('README.md', generateMarkdown(data)));
 // Function call to initialize app
 init();
