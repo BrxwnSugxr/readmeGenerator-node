@@ -33,14 +33,13 @@ function renderLicenseSection(license) {
   const link = renderLicenseLink(data.license);
   const section = renderLicenseSection(data.license);
 
-  if (section === ''){
+  if (section === '') {
     licenseShortcut = '';
-  }else {
-    licenseShortcut = " - [License](#license)"
+  } else {
+    licenseShortcut = ' - [License](#license)';
   }
-  return `# ${data.title}`
+  return `# ${data.title}`;
 }
-
 
 // TODO: Create a function to generate markdown for README
 function generateMarkdown(data) {
@@ -60,22 +59,31 @@ ${licenseShortcut}
 - [Questions](#questions)
 
 
+## Usage
+  
+${data.usage}
 
+## Installation
+  
+  ${data.install}
 
+  ${section}${link}
 
+  ## Tests
+  
+  ${data.test}
 
+  ## Contributing
+  
+  ${data.contribute}
 
+  ### Questions
+  
+  You can find my GitHub profile at: https://github.com/${data.username}
 
-
-
-
-
-
-
-
-
+  If you have any questions, you can contact me by email: ${data.email}
 
 `;
 }
 
-module.exports = generateMarkdown;
+module.exports = { generateMarkdown };
