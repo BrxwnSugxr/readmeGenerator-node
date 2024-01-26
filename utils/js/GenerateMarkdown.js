@@ -52,7 +52,7 @@ ${data.description}
 # Table of Contents
 
 - [Usage](#usage)
-- [Installation](#installation)
+- [Installation](#installation) 
 ${licenseShortcut}
 - [Tests](#tests)
 - [Contributing](#contributing)
