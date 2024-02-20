@@ -1,91 +1,138 @@
-// TODO: Include packages needed for this application
-
-const inquirer = require('inquirer');
+// Include packages needed for this application
 const fs = require('fs');
-const { generateMarkdown } = require(`./utils/js/GenerateMarkdown`);
-// TODO: Create an array of questions for user input
+const inquirer = require('inquirer');
+const generateMarkdown = require('./utils/GenerateMarkdown');
+const generateLicense = require('./utils/generateLicense');
+
+// Create an array of questions for user input
 const questions = [
-  'What is your project title?',
-  'What is the description of this project?',
-  'What installation steps are required to run this?',
-  'What instructions or examples are there using the projects? (Add screenshot: copy and past, ![alt text](utils/img/img.png))',
-  'What license does it use?',
-  'are there any contributing guidelines?',
-  'what test have you written to be able to run from the readme? you must write them here.',
-  'what is your Github Username?',
-  'What is your email address?',
+  // Added validate for every item so that the user is required to answer everything
+  {
+    type: 'input',
+    name: 'name',
+    message: 'What is your full name?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter a valid name';
+    },
+  },
+  {
+    type: 'input',
+    name: 'username',
+    message: 'What is your username?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter a valid username';
+    },
+  },
+  {
+    type: 'input',
+    name: 'email',
+    message: 'What is your email address? (e.g. name@email.com)',
+    validate(value) {
+      if (value.includes('@')) {
+        return true;
+      }
+      return 'Please enter a valid email address';
+    },
+  },
+  {
+    type: 'input',
+    name: 'title',
+    message: 'What is the project name?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter a valid project name';
+    },
+  },
+  {
+    type: 'editor',
+    name: 'desc',
+    message: 'Enter a short project description:',
+    validate(value) {
+      if (value) {
+        return true;
+      }
+      return 'Please enter a description.';
+    },
+  },
+  {
+    type: 'input',
+    name: 'install',
+    message: 'How is this installed?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter an installation code.';
+    },
+  },
+  {
+    type: 'input',
+    name: 'usage',
+    message: 'How is this program used?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter a code.';
+    },
+  },
+  {
+    type: 'input',
+    name: 'test',
+    message: 'How do you test the program?',
+    validate(value) {
+      if (value.length > 0) {
+        return true;
+      }
+      return 'Please enter a test code.';
+    },
+  },
+  {
+    type: 'list',
+    name: 'license',
+    message: 'License:',
+    choices: ['Apache', 'GNU GPLv3', 'MIT', 'Mozilla', 'Unlicense', 'None'],
+    default: 5,
+  },
+  {
+    type: 'editor',
+    name: 'contribute',
+    message: 'What do we need to know about contributing?',
+    validate(value) {
+      if (value) {
+        return true;
+      }
+      return 'Please enter a text.';
+    },
+  },
 ];
 
-// TODO: Create a function to write README file
+// Create a function to write the files
 function writeToFile(fileName, data) {
   fs.writeFile(fileName, data, (err) =>
-    err ? console.log(err) : console.log('Markdown file generated')
+    err ? console.error(err) : console.log(`${fileName} successfully created!`)
   );
 }
 
-// TODO: Create a function to initialize app
+// Create a function to initialize app
 function init() {
-  inquirer
-    .prompt([
-      {
-        type: 'input',
-        name: 'title',
-        message: questions[0],
-      },
-      {
-        type: 'input',
-        name: 'description',
-        message: questions[1],
-      },
-      {
-        type: 'input',
-        name: 'install',
-        message: questions[2],
-      },
-      {
-        type: 'input',
-        name: 'usage',
-        message: questions[3],
-      },
-      {
-        type: 'list',
-        name: 'license',
-        message: questions[4],
-        choices: [
-          'No License used.',
-          'MIT License.',
-          'Apache License 2.0.',
-          'Mozilla Public License 2.0.',
-          'GNU GPLv3.',
-        ],
-      },
-      {
-        type: 'list',
-        name: 'contribute',
-        message: questions[5],
-        choices: [
-          'Contributing guidelines: [Code of conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/)',
-          'To be decided on at a later date.',
-        ],
-      },
-      {
-        type: 'input',
-        name: 'test',
-        message: questions[6],
-      },
-      {
-        type: 'input',
-        name: 'username',
-        message: questions[7],
-      },
-      {
-        type: 'input',
-        name: 'email',
-        message: questions[8],
-      },
-    ])
-    .then((data) => writeToFile('README.md', generateMarkdown(data)));
-
+  inquirer.prompt(questions).then((answers) => {
+    // create README file
+    writeToFile('README.md', generateMarkdown(answers));
+    // create LICENSE file if user selected a License
+    if (answers.license && answers.license !== 'None') {
+      writeToFile('LICENSE', generateLicense(answers));
+    }
+  });
 }
+
 // Function call to initialize app
 init();
