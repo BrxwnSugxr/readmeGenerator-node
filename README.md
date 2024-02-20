@@ -40,9 +40,9 @@ npm run test
 ![Packet](./utils/img/packet.png)
 ![Terminal](./utils/img/terminal.png)
 
-## Questions
+## Future update
 
-For more information, go to my [Github](https://www.github.com/Sahid) or contact [0tohero@coder.com](mailto:0tohero@coder.com) with any additional questions or comments.
+will create test scrips
 
 ## License
 
